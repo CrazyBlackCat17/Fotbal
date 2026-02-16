@@ -46,6 +46,7 @@ const GOAL_CHANT_PAUSE_MS = 4000;
 
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
 const DEFAULT_SOUND_VOLUME = 0.85;
+const DEFAULT_CHANTS_VOLUME = 1;
 const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
 
 const HALF_DURATION = 60;
@@ -103,7 +104,7 @@ const state = {
   halfTimePaused: false,
   soundVolume: DEFAULT_SOUND_VOLUME,
   ballSpeedMultiplier: DEFAULT_BALL_SPEED_MULTIPLIER,
-  chantsEnabled: true,
+  chantsVolume: DEFAULT_CHANTS_VOLUME,
   half: 1,
   timeLeft: HALF_DURATION,
   lastFrameTime: 0,
@@ -201,8 +202,10 @@ function loadSettingsFromStorage() {
     if (typeof parsed.ballSpeedMultiplier === "number") {
       state.ballSpeedMultiplier = clamp(parsed.ballSpeedMultiplier, 0.6, 1.8);
     }
-    if (typeof parsed.chantsEnabled === "boolean") {
-      state.chantsEnabled = parsed.chantsEnabled;
+    if (typeof parsed.chantsVolume === "number") {
+      state.chantsVolume = clamp(parsed.chantsVolume, 0, 1);
+    } else if (typeof parsed.chantsEnabled === "boolean") {
+      state.chantsVolume = parsed.chantsEnabled ? 1 : 0;
     }
   } catch (_error) {
     // Ignore invalid or unavailable storage.
@@ -214,7 +217,7 @@ function persistSettingsToStorage() {
     const payload = {
       soundVolume: state.soundVolume,
       ballSpeedMultiplier: state.ballSpeedMultiplier,
-      chantsEnabled: state.chantsEnabled,
+      chantsVolume: state.chantsVolume,
     };
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(payload));
   } catch (_error) {
@@ -281,6 +284,10 @@ function initBallSprite() {
 
 function getEffectiveVolume(baseVolume) {
   return clamp(baseVolume * state.soundVolume, 0, 1);
+}
+
+function getEffectiveChantsVolume(baseVolume) {
+  return clamp(baseVolume * state.soundVolume * state.chantsVolume, 0, 1);
 }
 
 function initKickSounds() {
@@ -427,16 +434,16 @@ function initSigmaUltrasSounds() {
 }
 
 function syncSigmaUltrasVolume() {
-  if (sigmaUltrasFirstHalfSound) sigmaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (sigmaUltrasSecondHalfSound) sigmaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (spartaUltrasFirstHalfSound) spartaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (spartaUltrasSecondHalfSound) spartaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (plzenUltrasFirstHalfSound) plzenUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (plzenUltrasSecondHalfSound) plzenUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (slaviaUltrasFirstHalfSound) slaviaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (slaviaUltrasSecondHalfSound) slaviaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (banikUltrasFirstHalfSound) banikUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (banikUltrasSecondHalfSound) banikUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
+  if (sigmaUltrasFirstHalfSound) sigmaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (sigmaUltrasSecondHalfSound) sigmaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (spartaUltrasFirstHalfSound) spartaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (spartaUltrasSecondHalfSound) spartaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (plzenUltrasFirstHalfSound) plzenUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (plzenUltrasSecondHalfSound) plzenUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (slaviaUltrasFirstHalfSound) slaviaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (slaviaUltrasSecondHalfSound) slaviaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (banikUltrasFirstHalfSound) banikUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (banikUltrasSecondHalfSound) banikUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
 }
 
 function stopSigmaUltrasChant() {
@@ -499,7 +506,7 @@ function stopSigmaUltrasChant() {
 }
 
 function playSigmaUltrasForHalf(half) {
-  if (!state.chantsEnabled) return;
+  if (state.chantsVolume <= 0) return;
 
   let targetSound = null;
 
@@ -549,7 +556,7 @@ function pauseSigmaUltrasAfterGoal() {
 
   sigmaUltrasResumeTimeoutId = setTimeout(() => {
     sigmaUltrasResumeTimeoutId = null;
-    if (!state.gameActive || gameOver || !state.chantsEnabled) return;
+    if (!state.gameActive || gameOver || state.chantsVolume <= 0) return;
     if (state.selectedTeam !== pausedTeam) return;
     if (state.half !== pausedHalf || activeSigmaUltrasSound !== pausedSound) return;
     syncSigmaUltrasVolume();
@@ -593,50 +600,8 @@ function createSettingSlider(label, options) {
   return wrapper;
 }
 
-function createSettingToggle(label, options) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "settings-control";
-
-  const row = document.createElement("div");
-  row.className = "settings-control-title settings-control-title--compact";
-
-  const text = document.createElement("span");
-  text.textContent = label;
-
-  const toggle = document.createElement("button");
-  toggle.type = "button";
-  toggle.className = "settings-toggle";
-
-  const thumb = document.createElement("span");
-  thumb.className = "settings-toggle-thumb";
-
-  const value = document.createElement("span");
-  value.className = "settings-toggle-value";
-
-  let enabled = Boolean(options.checked);
-  const updateToggle = () => {
-    toggle.classList.toggle("is-on", enabled);
-    toggle.setAttribute("aria-pressed", String(enabled));
-    value.textContent = enabled ? "Zapnuto" : "Vypnuto";
-  };
-
-  toggle.appendChild(thumb);
-  toggle.appendChild(value);
-  toggle.addEventListener("click", () => {
-    enabled = !enabled;
-    updateToggle();
-    options.onChange(enabled);
-  });
-
-  updateToggle();
-  row.appendChild(text);
-  row.appendChild(toggle);
-  wrapper.appendChild(row);
-  return wrapper;
-}
-
 function showSettingsMenu() {
-  setMenu("Nastavení", "Uprav hlasitost a rychlost míče.", [
+  setMenu("Nastavení", "Uprav hlasitost zvuků, chorálů a rychlost míče.", [
     { label: "Zpět", secondary: true, onClick: showMainMenu },
   ]);
 
@@ -659,11 +624,16 @@ function showSettingsMenu() {
   );
 
   controls.appendChild(
-    createSettingToggle("Chorály", {
-      checked: state.chantsEnabled,
-      onChange: (enabled) => {
-        state.chantsEnabled = enabled;
-        if (!enabled) stopSigmaUltrasChant();
+    createSettingSlider("Hlasitost chorálů", {
+      min: 0,
+      max: 1,
+      step: 0.01,
+      value: state.chantsVolume,
+      format: (v) => `${Math.round(v * 100)} %`,
+      onChange: (v) => {
+        state.chantsVolume = v;
+        syncSigmaUltrasVolume();
+        if (v <= 0) stopSigmaUltrasChant();
         persistSettingsToStorage();
       },
     }),
