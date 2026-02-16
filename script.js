@@ -47,7 +47,7 @@ const GOAL_CHANT_PAUSE_MS = 4000;
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
 const DEFAULT_SOUND_VOLUME = 0.85;
 const DEFAULT_CHANTS_VOLUME = 1;
-const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
+const DEFAULT_BALL_SPEED_MULTIPLIER = 1.08;
 
 const HALF_DURATION = 60;
 const TOTAL_HALVES = 2;
@@ -55,7 +55,7 @@ const GOAL_PAUSE_MS = 3000;
 const POST_RADIUS = 6;
 
 const FRICTION = 0.997;
-const PLAYER_SPEED = 7.6;
+const PLAYER_SPEED = 8.3;
 
 const AI_PRESETS = {
   easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
