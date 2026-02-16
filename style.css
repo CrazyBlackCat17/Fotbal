@@ -270,3 +270,51 @@ button.secondary {
 .settings-slider {
   width: 100%;
 }
+
+.settings-control-title--compact {
+  margin-bottom: 0;
+}
+
+.settings-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  min-width: 108px;
+  padding: 0.28rem 0.38rem;
+  border-radius: 999px;
+  background: rgba(120, 120, 120, 0.32);
+  color: #f1f1f1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.settings-toggle-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease;
+}
+
+.settings-toggle-value {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  min-width: 3.2rem;
+  text-align: left;
+}
+
+.settings-toggle.is-on {
+  background: linear-gradient(120deg, #2dbb66 0%, #23a959 100%);
+  border-color: rgba(197, 255, 218, 0.72);
+  box-shadow: 0 0 0 2px rgba(45, 187, 102, 0.2);
+}
+
+.settings-toggle.is-on .settings-toggle-thumb {
+  transform: translateX(0.15rem);
+}
+
+.settings-toggle:not(.is-on) .settings-toggle-thumb {
+  background: #d8d8d8;
+}

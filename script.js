@@ -594,21 +594,40 @@ function createSettingToggle(label, options) {
   const wrapper = document.createElement("div");
   wrapper.className = "settings-control";
 
-  const row = document.createElement("label");
-  row.className = "settings-control-title";
+  const row = document.createElement("div");
+  row.className = "settings-control-title settings-control-title--compact";
 
   const text = document.createElement("span");
   text.textContent = label;
 
-  const input = document.createElement("input");
-  input.type = "checkbox";
-  input.checked = options.checked;
-  input.addEventListener("change", () => {
-    options.onChange(input.checked);
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "settings-toggle";
+
+  const thumb = document.createElement("span");
+  thumb.className = "settings-toggle-thumb";
+
+  const value = document.createElement("span");
+  value.className = "settings-toggle-value";
+
+  let enabled = Boolean(options.checked);
+  const updateToggle = () => {
+    toggle.classList.toggle("is-on", enabled);
+    toggle.setAttribute("aria-pressed", String(enabled));
+    value.textContent = enabled ? "Zapnuto" : "Vypnuto";
+  };
+
+  toggle.appendChild(thumb);
+  toggle.appendChild(value);
+  toggle.addEventListener("click", () => {
+    enabled = !enabled;
+    updateToggle();
+    options.onChange(enabled);
   });
 
+  updateToggle();
   row.appendChild(text);
-  row.appendChild(input);
+  row.appendChild(toggle);
   wrapper.appendChild(row);
   return wrapper;
 }
