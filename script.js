@@ -63,7 +63,7 @@ const AI_PRESETS = {
   extreme: { label: "Extrémní", speed: 5.5, reactionFrames: 2 },
 };
 
-const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín"];
+const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín", "Teplice"];
 
 const TEAM_LOGO_CANDIDATES = {
   "Slavia": ["assets/slavia.png", "assets/Slavia.png", "assets/slavia.jpg", "assets/Slavia.jpg"],
@@ -88,6 +88,7 @@ const TEAM_LOGO_CANDIDATES = {
   "Slovan Liberec": ["assets/liberec.png", "assets/Liberec.png", "assets/liberec.jpg", "assets/Liberec.jpg"],
   "Bohemians Praha": ["assets/bohemians.png", "assets/Bohemians.png", "assets/bohemians.jpg", "assets/Bohemians.jpg"],
   "Zlín": ["assets/zlín.png", "assets/Zlin.png", "assets/zlin.png", "assets/zlín.jpg", "assets/Zlin.jpg", "assets/zlin.jpg"],
+  "Teplice": ["assets/teplice.svg", "assets/Teplice.svg", "assets/teplice.png", "assets/Teplice.png", "assets/teplice.jpg", "assets/Teplice.jpg"],
 };
 
 
@@ -117,6 +118,7 @@ function getPlayerColorByTeam(teamName) {
   if (teamName === "Slavia") return "#ffffff";
   if (teamName === "Sparta") return "#881515";
   if (teamName === "Baník") return "#4dafff";
+  if (teamName === "Teplice") return "#f7c600";
   if (teamName === "Karviná") return "#0f7a2f";
   if (teamName === "Pardubice") return "#ffffff";
   if (teamName === "Viktoria Plzeň") return "#0058a8";
@@ -128,6 +130,7 @@ function getPlayerColorByTeam(teamName) {
 function getPlayerLogoScaleByTeam(teamName) {
   if (teamName === "Sparta") return { x: 0.76, y: 0.94 };
   if (teamName === "Baník") return { x: 0.76, y: 0.76 };
+  if (teamName === "Teplice") return { x: 0.76, y: 0.76 };
   if (teamName === "Karviná") return { x: 0.9, y: 0.9 };
   if (teamName === "Pardubice") return { x: 0.92, y: 0.92 };
   if (teamName === "Artis Brno") return { x: 1.1, y: 1.1 };
