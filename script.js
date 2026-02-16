@@ -325,7 +325,7 @@ function playRefWhistle() {
 }
 
 function initFinalWhistleSound() {
-  finalWhistleSound = loadAudioFromCandidates(FINAL_WHISTLE_CANDIDATES, 0.6);
+  finalWhistleSound = loadAudioFromCandidates(FINAL_WHISTLE_CANDIDATES, 0.4);
 }
 
 function playFinalWhistle() {
