@@ -116,6 +116,7 @@ button.secondary {
 
 .score-team--right {
   justify-content: flex-end;
+  flex-direction: row-reverse;
 }
 
 .score-team-info {
