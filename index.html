@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Czech Mini Football</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="game-wrapper">
+      <h1>Czech Mini Football</h1>
+
+      <section id="menu" class="menu-card">
+        <h2 id="menuTitle">Hlavní menu</h2>
+        <p id="menuSubtitle">Vyber co chceš dělat.</p>
+        <div id="menuButtons" class="menu-buttons"></div>
+      </section>
+
+      <section id="gameView" class="game-view hidden">
+        <p class="instructions">Drž prst/myš na hřišti a tahej svého hráče.</p>
+
+        <section class="scoreboard" aria-label="Skóre">
+          <div>
+            <span class="team" id="leftTeamName">Ty</span>
+            <span id="leftScore">0</span>
+          </div>
+          <div class="match-meta">
+            <span id="halfInfo">1. poločas</span>
+            <span id="timeInfo">60 s</span>
+          </div>
+          <div>
+            <span class="team" id="rightTeamName">AI</span>
+            <span id="rightScore">0</span>
+          </div>
+        </section>
+
+        <div class="canvas-wrap">
+          <canvas id="gameCanvas" width="480" height="780" aria-label="Hrací plocha"></canvas>
+          <div id="goalOverlay" class="goal-overlay hidden">GOAL</div>
+          <section id="halftimeOverlay" class="halftime-overlay hidden" aria-live="polite">
+            <h3>Poločas</h3>
+            <p id="halftimeScore" class="halftime-score">0 : 0</p>
+            <button id="startSecondHalfBtn" type="button">Zahájit 2. Poločas</button>
+          </section>
+          <section id="fulltimeOverlay" class="fulltime-overlay hidden" aria-live="polite">
+            <h3>Konec</h3>
+            <p id="fulltimeScore" class="fulltime-score">0 : 0</p>
+            <p id="fulltimeWinner" class="fulltime-winner">Vyhrál tým</p>
+          </section>
+        </div>
+
+        <img id="ballSprite" src="assets/ball-sprite.png" alt="" hidden />
+
+        <div class="game-actions">
+          <button id="resetBtn" type="button">Nový zápas</button>
+          <button id="backToMenuBtn" type="button" class="secondary">Zpět do menu</button>
+        </div>
+        <p id="message" class="message"></p>
+        <p class="todo-note">Logo vybraného týmu se zobrazuje na hráčské kuličce.</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 1rem;
+  display: grid;
+  place-items: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top, #1f6f3f 0%, #0f3d23 70%);
+  color: #f4f4f4;
+}
+
+.game-wrapper {
+  width: min(510px, 100%);
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 5vw, 2.4rem);
+}
+
+.menu-card {
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.menu-card h2 {
+  margin: 0 0 0.35rem;
+}
+
+.menu-card p {
+  margin: 0 0 0.9rem;
+  opacity: 0.9;
+}
+
+.menu-buttons {
+  display: grid;
+  gap: 0.55rem;
+}
+
+button {
+  border: none;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: #ffcf33;
+  color: #1a1a1a;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.menu-team-logo {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+
+.menu-team-logo--viktoria {
+  transform: scaleX(0.82) scaleY(1.08);
+}
+
+.menu-team-logo--mlada {
+  transform: scale(2);
+}
+
+button.secondary {
+  background: #ffffff2e;
+  color: #fff;
+}
+
+.hidden {
+  display: none;
+}
+
+.instructions {
+  margin: 0 0 0.8rem;
+  opacity: 0.92;
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  margin: 0.8rem 0;
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
+  font-weight: 700;
+}
+
+.team {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.match-meta {
+  padding: 0 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  opacity: 0.95;
+}
+
+.match-meta span {
+  display: block;
+}
+
+.canvas-wrap {
+  position: relative;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  border: 4px solid #ffffff;
+  border-radius: 14px;
+  background: #2d944c;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
+  touch-action: none;
+  cursor: grab;
+}
+
+#gameCanvas.dragging {
+  cursor: grabbing;
+}
+
+.goal-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(2.6rem, 13vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 145, 0, 0.7);
+  background: radial-gradient(circle, rgba(255, 80, 0, 0.2) 0%, rgba(0, 0, 0, 0.15) 70%);
+  pointer-events: none;
+  animation: pulse 0.7s ease-in-out infinite;
+}
+
+
+.goal-overlay.hidden {
+  display: none;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.game-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.message {
+  min-height: 1.25rem;
+  margin-top: 0.65rem;
+  font-weight: 700;
+}
+
+.todo-note {
+  opacity: 0.75;
+  font-size: 0.85rem;
+}
+
+
+.halftime-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(82%, 320px);
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  z-index: 8;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.halftime-overlay h3 {
+  margin: 0 0 0.35rem;
+}
+
+.halftime-score {
+  margin: 0 0 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+
+.fulltime-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(82%, 320px);
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: rgba(9, 22, 14, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  z-index: 9;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.fulltime-overlay h3 {
+  margin: 0 0 0.35rem;
+}
+
+.fulltime-score {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.fulltime-winner {
+  margin: 0;
+  font-weight: 700;
+}
+
+
+.settings-controls {
+  display: grid;
+  gap: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.settings-control {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+}
+
+.settings-control-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+}
+
+.settings-slider {
+  width: 100%;
+}
