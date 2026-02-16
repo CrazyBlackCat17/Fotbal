@@ -11,6 +11,8 @@ const leftScoreEl = document.getElementById("leftScore");
 const rightScoreEl = document.getElementById("rightScore");
 const leftTeamNameEl = document.getElementById("leftTeamName");
 const rightTeamNameEl = document.getElementById("rightTeamName");
+const leftTeamLogoEl = document.getElementById("leftTeamLogo");
+const rightTeamLogoEl = document.getElementById("rightTeamLogo");
 const halfInfoEl = document.getElementById("halfInfo");
 const timeInfoEl = document.getElementById("timeInfo");
 const goalOverlayEl = document.getElementById("goalOverlay");
@@ -758,6 +760,21 @@ function getTeamMenuButtonLogo(teamName) {
   return candidates[0] || getFallbackTeamLogo(teamName);
 }
 
+function setScoreboardTeamLogo(imgEl, teamName) {
+  if (!imgEl) return;
+  const logoSrc = getTeamMenuButtonLogo(teamName);
+  const fallbackSrc = getFallbackTeamLogo(teamName);
+  imgEl.src = logoSrc;
+  imgEl.alt = `Logo týmu ${teamName}`;
+  imgEl.onerror = () => {
+    if (imgEl.src !== fallbackSrc) {
+      imgEl.src = fallbackSrc;
+      return;
+    }
+    imgEl.onerror = null;
+  };
+}
+
 function loadImageFromCandidates(candidates) {
   return new Promise((resolve) => {
     if (!candidates || candidates.length === 0) {
@@ -882,6 +899,8 @@ function startGame() {
   ai.color = getPlayerColorByTeam(state.aiTeam);
   leftTeamNameEl.textContent = state.selectedTeam;
   rightTeamNameEl.textContent = `${state.aiTeam} (AI)`;
+  setScoreboardTeamLogo(leftTeamLogoEl, state.selectedTeam);
+  setScoreboardTeamLogo(rightTeamLogoEl, state.aiTeam);
   state.lastFrameTime = performance.now();
   resetMatch();
   playSigmaUltrasForHalf(1);
