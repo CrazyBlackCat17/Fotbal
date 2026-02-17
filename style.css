@@ -60,7 +60,6 @@ h1 {
   gap: 0.62rem;
 }
 
-
 .menu-info-box {
   margin-top: 0.4rem;
   padding: 0.75rem;
@@ -79,6 +78,7 @@ h1 {
   color: rgba(230, 244, 236, 0.95);
   opacity: 1;
 }
+
 .menu-copyright {
   margin: 1.45rem 0 0;
   padding: 0.6rem 0 0.2rem;
