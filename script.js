@@ -1369,7 +1369,12 @@ canvas.addEventListener("pointerup", (event) => {
 canvas.addEventListener("pointercancel", (event) => stopDrag(event.pointerId));
 
 resetBtn.addEventListener("click", () => {
+  const wantsNewMatch = window.confirm("Opravdu chceš začít nový zápas?");
+  if (!wantsNewMatch) return;
+
   resetMatch();
+  playRefWhistle();
+  playSigmaUltrasForHalf(1);
 });
 
 backToMenuBtn.addEventListener("click", showMainMenu);
