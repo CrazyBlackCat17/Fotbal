@@ -58,6 +58,10 @@ const POST_RADIUS = 6;
 
 const FRICTION = 0.997;
 const PLAYER_SPEED = 8.6;
+const AI_SHOT_OFFSET = 34;
+const AI_IDLE_Y_RATIO = 0.22;
+const AI_DEFENSE_Y_RATIO = 0.31;
+const AI_TARGET_BLEND = 0.22;
 
 const AI_PRESETS = {
   easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
@@ -167,7 +171,7 @@ function getPlayerBorderColorByTeam(teamName) {
 const ball = { x: canvas.width / 2, y: canvas.height / 2, radius: 18, vx: 0, vy: 0 };
 
 const dragState = { active: false, pointerId: null, targetX: player.x, targetY: player.y };
-const aiBrain = { frame: 0, targetX: ai.x, targetY: ai.y };
+const aiBrain = { frame: 0, targetX: ai.x, targetY: ai.y, aimJitterX: 0, jitterCooldown: 0 };
 
 let leftScore = 0;
 let rightScore = 0;
@@ -881,6 +885,8 @@ function resetPositions() {
   aiBrain.targetX = ai.x;
   aiBrain.targetY = ai.y;
   aiBrain.frame = 0;
+  aiBrain.aimJitterX = 0;
+  aiBrain.jitterCooldown = 0;
 
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
@@ -947,10 +953,42 @@ function updatePlayerFromDrag() {
 
 function moveAI() {
   aiBrain.frame += 1;
+  aiBrain.jitterCooldown -= 1;
+
   if (aiBrain.frame >= state.aiPreset.reactionFrames) {
     aiBrain.frame = 0;
-    aiBrain.targetX = ball.x;
-    aiBrain.targetY = ball.y < canvas.height / 2 ? ball.y : canvas.height * 0.25;
+
+    const { goalLeft, goalRight } = getGoalBounds();
+    const targetGoalX = clamp(player.x * 0.45 + canvas.width * 0.55, goalLeft + ball.radius, goalRight - ball.radius);
+    const targetGoalY = canvas.height + 70;
+
+    if (aiBrain.jitterCooldown <= 0) {
+      aiBrain.aimJitterX = (Math.random() - 0.5) * 20;
+      aiBrain.jitterCooldown = 20 + Math.floor(Math.random() * 30);
+    }
+
+    const toGoalX = (targetGoalX + aiBrain.aimJitterX) - ball.x;
+    const toGoalY = targetGoalY - ball.y;
+    const shotLength = Math.hypot(toGoalX, toGoalY) || 1;
+    const shotDirX = toGoalX / shotLength;
+    const shotDirY = toGoalY / shotLength;
+
+    let desiredX;
+    let desiredY;
+    const ballInAiHalf = ball.y < canvas.height * 0.58;
+
+    if (ballInAiHalf) {
+      desiredX = ball.x - shotDirX * AI_SHOT_OFFSET;
+      desiredY = ball.y - shotDirY * AI_SHOT_OFFSET;
+      desiredY = Math.min(desiredY, ball.y - 8);
+      desiredY = Math.max(desiredY, ai.radius + 6);
+    } else {
+      desiredX = ball.x * 0.7 + canvas.width * 0.15;
+      desiredY = canvas.height * AI_DEFENSE_Y_RATIO;
+    }
+
+    aiBrain.targetX += (desiredX - aiBrain.targetX) * AI_TARGET_BLEND;
+    aiBrain.targetY += (desiredY - aiBrain.targetY) * AI_TARGET_BLEND;
   }
 
   const dx = aiBrain.targetX - ai.x;
@@ -960,6 +998,10 @@ function moveAI() {
   ai.y += clamp(dy, -state.aiPreset.speed, state.aiPreset.speed);
   ai.x = clamp(ai.x, ai.radius, canvas.width - ai.radius);
   ai.y = clamp(ai.y, ai.radius, canvas.height / 2 - ai.radius);
+
+  if (ball.y > canvas.height * 0.62 && ai.y < canvas.height * AI_IDLE_Y_RATIO) {
+    ai.y += state.aiPreset.speed * 0.35;
+  }
 }
 
 function resolveCollision(paddle) {
@@ -979,8 +1021,33 @@ function resolveCollision(paddle) {
       ball.vx -= 2 * relativeSpeed * nx;
       ball.vy -= 2 * relativeSpeed * ny;
     }
-    ball.vx += nx * 0.72;
-    ball.vy += ny * 0.72;
+
+    let kickX = nx;
+    let kickY = ny;
+
+    if (paddle === ai) {
+      const { goalLeft, goalRight } = getGoalBounds();
+      const aimGoalX = clamp(player.x * 0.45 + canvas.width * 0.55, goalLeft + ball.radius, goalRight - ball.radius);
+      const aimVectorX = aimGoalX - ball.x;
+      const aimVectorY = canvas.height - ball.y;
+      const aimLength = Math.hypot(aimVectorX, aimVectorY) || 1;
+      const aimDirX = aimVectorX / aimLength;
+      const aimDirY = aimVectorY / aimLength;
+
+      kickX = kickX * 0.35 + aimDirX * 0.65;
+      kickY = kickY * 0.25 + aimDirY * 0.75;
+
+      if (ball.y < canvas.height * 0.26) {
+        kickY = Math.max(kickY, 0.55);
+      }
+
+      const kickLength = Math.hypot(kickX, kickY) || 1;
+      kickX /= kickLength;
+      kickY /= kickLength;
+    }
+
+    ball.vx += kickX * 0.72;
+    ball.vy += kickY * 0.72;
     playRandomKickSound();
   }
 }
