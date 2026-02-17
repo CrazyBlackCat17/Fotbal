@@ -754,7 +754,7 @@ function getTeamInitials(teamName) {
 function getFallbackTeamLogo(teamName) {
   const initials = getTeamInitials(teamName);
   const baseColor = getPlayerColorByTeam(teamName);
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='${baseColor}'/><stop offset='100%' stop-color='#1f1f1f'/></linearGradient></defs><circle cx='36' cy='36' r='34' fill='url(#g)' stroke='white' stroke-width='2'/><text x='36' y='42' text-anchor='middle' font-size='24' font-family='Segoe UI,Arial,sans-serif' font-weight='700' fill='white'>${initials}</text></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='${baseColor}'/><stop offset='100%' stop-color='#1f1f1f'/></linearGradient></defs><circle cx='36' cy='36' r='34' fill='url(#g)' stroke='white' stroke-width='2'/><text x='36' y='42' text-anchor='middle' font-size='24' font-family='Calm Font,Trebuchet MS,Arial,sans-serif' font-weight='700' fill='white'>${initials}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
