@@ -661,6 +661,18 @@ function showSettingsMenu() {
   menuButtonsEl.prepend(controls);
 }
 
+function renderMainMenuInfo() {
+  const infoBox = document.createElement("section");
+  infoBox.className = "menu-info-box";
+  infoBox.innerHTML = `
+    <p>- Chorály mají tyto týmy: Slavia, Sparta, Baník, Viktoria Plzeň a Sigma Olomouc.</p>
+    <p>- Chorály se dají v nastavení ztlumit či zeslabit</p>
+    <p>- Míč se dá v nastavení zrychlit</p>
+    <p>- V budoucnu přidám více chorálů, týmů, a taky přidám Upgrady, Online mód a Tabulku.</p>
+  `;
+  menuButtonsEl.appendChild(infoBox);
+}
+
 function showMainMenu() {
   state.gameActive = false;
   stopSigmaUltrasChant();
@@ -679,6 +691,8 @@ function showMainMenu() {
       onClick: showSettingsMenu,
     },
   ]);
+
+  renderMainMenuInfo();
 }
 
 function showPlayMenu() {
