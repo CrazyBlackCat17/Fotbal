@@ -58,7 +58,10 @@ h1 {
 }
 
 .menu-copyright {
-  margin: 0.95rem 0 0;
+  margin: 1.15rem 0 0;
+  padding-top: 0.35rem;
+  text-align: center;
+  width: 100%;
   font-size: 0.72rem;
   opacity: 0.72;
   letter-spacing: 0.03em;
