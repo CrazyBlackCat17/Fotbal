@@ -132,7 +132,21 @@ function getPlayerColorByTeam(teamName) {
   return "#0f5fff";
 }
 
-function getPlayerLogoScaleByTeam(_teamName) {
+function getPlayerLogoScaleByTeam(teamName) {
+  if (teamName === "Sparta") return { x: 0.76, y: 0.94 };
+  if (teamName === "Baník") return { x: 0.76, y: 0.76 };
+  if (teamName === "Teplice") return { x: 0.66, y: 0.82 };
+  if (teamName === "Dukla Praha") return { x: 0.82, y: 0.60 };
+  if (teamName === "Karviná") return { x: 0.9, y: 0.9 };
+  if (teamName === "Pardubice") return { x: 0.92, y: 0.92 };
+  if (teamName === "Artis Brno") return { x: 1.1, y: 1.1 };
+  if (teamName === "Sigma Olomouc") return { x: 1.1, y: 1.1 };
+  if (teamName === "Viktoria Plzeň") return { x: 0.78, y: 1.06 };
+  if (teamName === "Mladá Boleslav") return { x: 1.8, y: 1.8 };
+  if (teamName === "Jablonec") return { x: 0.9, y: 0.9 };
+  if (teamName === "Slovan Liberec") return { x: 1, y: 1 };
+  if (teamName === "Bohemians Praha") return { x: 1.1, y: 1.1 };
+  if (teamName === "Zlín") return { x: 1.1, y: 1.1 };
   return { x: 1, y: 1 };
 }
 
