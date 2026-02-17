@@ -136,7 +136,7 @@ function getPlayerLogoScaleByTeam(teamName) {
   if (teamName === "Sparta") return { x: 0.76, y: 0.94 };
   if (teamName === "Baník") return { x: 0.76, y: 0.76 };
   if (teamName === "Teplice") return { x: 0.66, y: 0.82 };
-  if (teamName === "Dukla Praha") return { x: 0.82, y: 0.82 };
+  if (teamName === "Dukla Praha") return { x: 0.82, y: 0.76 };
   if (teamName === "Karviná") return { x: 0.9, y: 0.9 };
   if (teamName === "Pardubice") return { x: 0.92, y: 0.92 };
   if (teamName === "Artis Brno") return { x: 1.1, y: 1.1 };
