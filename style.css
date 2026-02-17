@@ -57,6 +57,13 @@ h1 {
   gap: 0.62rem;
 }
 
+.menu-copyright {
+  margin: 0.95rem 0 0;
+  font-size: 0.72rem;
+  opacity: 0.72;
+  letter-spacing: 0.03em;
+}
+
 button {
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 0.68rem 1rem;
