@@ -24,43 +24,73 @@ body {
 }
 
 h1 {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.55rem, 5vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
 }
 
 .menu-card {
-  background: rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  padding: 1rem;
+  background: linear-gradient(155deg, rgba(8, 31, 20, 0.9) 0%, rgba(7, 25, 16, 0.84) 100%);
+  border: 1px solid rgba(178, 242, 204, 0.26);
+  border-radius: 20px;
+  padding: 1.05rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 34px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(5px);
 }
 
 .menu-card h2 {
   margin: 0 0 0.35rem;
+  font-size: clamp(1.18rem, 3.6vw, 1.45rem);
 }
 
 .menu-card p {
-  margin: 0 0 0.9rem;
+  margin: 0 0 0.95rem;
   opacity: 0.9;
+  color: rgba(230, 244, 236, 0.9);
 }
 
 .menu-buttons {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.62rem;
+}
+
+.menu-copyright {
+  margin: 1.45rem 0 0;
+  padding: 0.6rem 0 0.2rem;
+  text-align: center;
+  width: 100%;
+  font-size: 0.72rem;
+  opacity: 0.72;
+  letter-spacing: 0.03em;
 }
 
 button {
-  border: none;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  background: #ffcf33;
-  color: #1a1a1a;
-  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.68rem 1rem;
+  border-radius: 12px;
+  background: linear-gradient(140deg, #ffd858 0%, #ffc328 100%);
+  color: #162212;
+  font-weight: 800;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
+  transition: transform 0.18s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.32);
+  filter: brightness(1.03);
+}
+
+button:active {
+  transform: translateY(0);
 }
 
 .menu-team-logo {
@@ -81,8 +111,9 @@ button {
 }
 
 button.secondary {
-  background: #ffffff2e;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.2) 0%, rgba(219, 231, 223, 0.14) 100%);
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .hidden {
@@ -97,28 +128,90 @@ button.secondary {
 .scoreboard {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  margin: 0.8rem 0;
-  font-size: clamp(1.15rem, 4vw, 1.45rem);
-  font-weight: 700;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.85rem 0;
+  padding: 0.6rem 0.72rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(5, 25, 14, 0.72) 0%, rgba(9, 41, 23, 0.58) 100%);
+  border: 1px solid rgba(155, 232, 184, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+.score-team {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.score-team--right {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+  justify-self: end;
+  margin-right: -0.2rem;
+}
+
+.score-team-info {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.score-team--right .score-team-info {
+  text-align: right;
+}
+
+.score-team-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .team {
   display: block;
-  font-size: 0.85rem;
-  opacity: 0.85;
-  font-weight: 500;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.88;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 8.8rem;
+}
+
+.team-score {
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 7px rgba(0, 0, 0, 0.36);
 }
 
 .match-meta {
-  padding: 0 0.5rem;
-  font-size: 0.88rem;
+  min-width: 106px;
+  padding: 0.4rem 0.55rem;
+  border-radius: 12px;
+  background: rgba(2, 14, 7, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.86rem;
   line-height: 1.2;
-  opacity: 0.95;
 }
 
-.match-meta span {
+.match-half,
+.match-time {
   display: block;
+  font-weight: 700;
+}
+
+.match-time {
+  color: #ffd44d;
+  font-size: 0.95rem;
 }
 
 .canvas-wrap {
@@ -247,26 +340,53 @@ button.secondary {
 
 .settings-controls {
   display: grid;
-  gap: 0.7rem;
-  margin-bottom: 0.6rem;
+  gap: 0.72rem;
+  margin-bottom: 0.7rem;
 }
 
 .settings-control {
   text-align: left;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  padding: 0.5rem 0.65rem;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(194, 236, 210, 0.2);
+  border-radius: 12px;
+  padding: 0.56rem 0.7rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .settings-control-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.4rem;
-  font-size: 0.92rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(236, 247, 240, 0.95);
 }
 
 .settings-slider {
   width: 100%;
+  accent-color: #7ae16f;
+}
+
+
+@media (max-width: 560px) {
+  .scoreboard {
+    padding: 0.52rem;
+    gap: 0.4rem;
+  }
+
+  .score-team-logo {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .team {
+    max-width: 6.7rem;
+    font-size: 0.72rem;
+  }
+
+  .match-meta {
+    min-width: 94px;
+    padding: 0.35rem 0.45rem;
+  }
 }
