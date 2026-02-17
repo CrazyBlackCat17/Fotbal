@@ -11,6 +11,8 @@ const leftScoreEl = document.getElementById("leftScore");
 const rightScoreEl = document.getElementById("rightScore");
 const leftTeamNameEl = document.getElementById("leftTeamName");
 const rightTeamNameEl = document.getElementById("rightTeamName");
+const leftTeamLogoEl = document.getElementById("leftTeamLogo");
+const rightTeamLogoEl = document.getElementById("rightTeamLogo");
 const halfInfoEl = document.getElementById("halfInfo");
 const timeInfoEl = document.getElementById("timeInfo");
 const goalOverlayEl = document.getElementById("goalOverlay");
@@ -46,7 +48,8 @@ const GOAL_CHANT_PAUSE_MS = 4000;
 
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
 const DEFAULT_SOUND_VOLUME = 0.85;
-const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
+const DEFAULT_CHANTS_VOLUME = 1;
+const DEFAULT_BALL_SPEED_MULTIPLIER = 1.08;
 
 const HALF_DURATION = 60;
 const TOTAL_HALVES = 2;
@@ -54,7 +57,7 @@ const GOAL_PAUSE_MS = 3000;
 const POST_RADIUS = 6;
 
 const FRICTION = 0.997;
-const PLAYER_SPEED = 7.6;
+const PLAYER_SPEED = 8.3;
 
 const AI_PRESETS = {
   easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
@@ -63,7 +66,7 @@ const AI_PRESETS = {
   extreme: { label: "Extrémní", speed: 5.5, reactionFrames: 2 },
 };
 
-const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín"];
+const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín", "Teplice", "Dukla Praha"];
 
 const TEAM_LOGO_CANDIDATES = {
   "Slavia": ["assets/slavia.png", "assets/Slavia.png", "assets/slavia.jpg", "assets/Slavia.jpg"],
@@ -88,6 +91,8 @@ const TEAM_LOGO_CANDIDATES = {
   "Slovan Liberec": ["assets/liberec.png", "assets/Liberec.png", "assets/liberec.jpg", "assets/Liberec.jpg"],
   "Bohemians Praha": ["assets/bohemians.png", "assets/Bohemians.png", "assets/bohemians.jpg", "assets/Bohemians.jpg"],
   "Zlín": ["assets/zlín.png", "assets/Zlin.png", "assets/zlin.png", "assets/zlín.jpg", "assets/Zlin.jpg", "assets/zlin.jpg"],
+  "Teplice": ["assets/teplice.png", "assets/Teplice.png", "assets/teplice.jpg", "assets/Teplice.jpg"],
+  "Dukla Praha": ["assets/dukla.png", "assets/Dukla.png", "assets/dukla.jpg", "assets/Dukla.jpg"],
 };
 
 
@@ -102,7 +107,7 @@ const state = {
   halfTimePaused: false,
   soundVolume: DEFAULT_SOUND_VOLUME,
   ballSpeedMultiplier: DEFAULT_BALL_SPEED_MULTIPLIER,
-  chantsEnabled: true,
+  chantsVolume: DEFAULT_CHANTS_VOLUME,
   half: 1,
   timeLeft: HALF_DURATION,
   lastFrameTime: 0,
@@ -117,6 +122,8 @@ function getPlayerColorByTeam(teamName) {
   if (teamName === "Slavia") return "#ffffff";
   if (teamName === "Sparta") return "#881515";
   if (teamName === "Baník") return "#4dafff";
+  if (teamName === "Teplice") return "#f7c600";
+  if (teamName === "Dukla Praha") return "#67101b";
   if (teamName === "Karviná") return "#0f7a2f";
   if (teamName === "Pardubice") return "#ffffff";
   if (teamName === "Viktoria Plzeň") return "#0058a8";
@@ -128,6 +135,8 @@ function getPlayerColorByTeam(teamName) {
 function getPlayerLogoScaleByTeam(teamName) {
   if (teamName === "Sparta") return { x: 0.76, y: 0.94 };
   if (teamName === "Baník") return { x: 0.76, y: 0.76 };
+  if (teamName === "Teplice") return { x: 0.66, y: 0.82 };
+  if (teamName === "Dukla Praha") return { x: 0.9, y: 0.9 };
   if (teamName === "Karviná") return { x: 0.9, y: 0.9 };
   if (teamName === "Pardubice") return { x: 0.92, y: 0.92 };
   if (teamName === "Artis Brno") return { x: 1.1, y: 1.1 };
@@ -198,8 +207,10 @@ function loadSettingsFromStorage() {
     if (typeof parsed.ballSpeedMultiplier === "number") {
       state.ballSpeedMultiplier = clamp(parsed.ballSpeedMultiplier, 0.6, 1.8);
     }
-    if (typeof parsed.chantsEnabled === "boolean") {
-      state.chantsEnabled = parsed.chantsEnabled;
+    if (typeof parsed.chantsVolume === "number") {
+      state.chantsVolume = clamp(parsed.chantsVolume, 0, 1);
+    } else if (typeof parsed.chantsEnabled === "boolean") {
+      state.chantsVolume = parsed.chantsEnabled ? 1 : 0;
     }
   } catch (_error) {
     // Ignore invalid or unavailable storage.
@@ -211,7 +222,7 @@ function persistSettingsToStorage() {
     const payload = {
       soundVolume: state.soundVolume,
       ballSpeedMultiplier: state.ballSpeedMultiplier,
-      chantsEnabled: state.chantsEnabled,
+      chantsVolume: state.chantsVolume,
     };
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(payload));
   } catch (_error) {
@@ -280,6 +291,10 @@ function getEffectiveVolume(baseVolume) {
   return clamp(baseVolume * state.soundVolume, 0, 1);
 }
 
+function getEffectiveChantsVolume(baseVolume) {
+  return clamp(baseVolume * state.soundVolume * state.chantsVolume, 0, 1);
+}
+
 function initKickSounds() {
   KICK_SOUND_FILES.forEach((src) => {
     const sound = new Audio(src);
@@ -315,7 +330,7 @@ function playRefWhistle() {
 }
 
 function initFinalWhistleSound() {
-  finalWhistleSound = loadAudioFromCandidates(FINAL_WHISTLE_CANDIDATES, 0.9);
+  finalWhistleSound = loadAudioFromCandidates(FINAL_WHISTLE_CANDIDATES, 0.4);
 }
 
 function playFinalWhistle() {
@@ -424,16 +439,16 @@ function initSigmaUltrasSounds() {
 }
 
 function syncSigmaUltrasVolume() {
-  if (sigmaUltrasFirstHalfSound) sigmaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (sigmaUltrasSecondHalfSound) sigmaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (spartaUltrasFirstHalfSound) spartaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (spartaUltrasSecondHalfSound) spartaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (plzenUltrasFirstHalfSound) plzenUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (plzenUltrasSecondHalfSound) plzenUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (slaviaUltrasFirstHalfSound) slaviaUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (slaviaUltrasSecondHalfSound) slaviaUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
-  if (banikUltrasFirstHalfSound) banikUltrasFirstHalfSound.volume = getEffectiveVolume(0.72);
-  if (banikUltrasSecondHalfSound) banikUltrasSecondHalfSound.volume = getEffectiveVolume(0.72);
+  if (sigmaUltrasFirstHalfSound) sigmaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (sigmaUltrasSecondHalfSound) sigmaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (spartaUltrasFirstHalfSound) spartaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (spartaUltrasSecondHalfSound) spartaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (plzenUltrasFirstHalfSound) plzenUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (plzenUltrasSecondHalfSound) plzenUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (slaviaUltrasFirstHalfSound) slaviaUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (slaviaUltrasSecondHalfSound) slaviaUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (banikUltrasFirstHalfSound) banikUltrasFirstHalfSound.volume = getEffectiveChantsVolume(0.72);
+  if (banikUltrasSecondHalfSound) banikUltrasSecondHalfSound.volume = getEffectiveChantsVolume(0.72);
 }
 
 function stopSigmaUltrasChant() {
@@ -496,7 +511,7 @@ function stopSigmaUltrasChant() {
 }
 
 function playSigmaUltrasForHalf(half) {
-  if (!state.chantsEnabled) return;
+  if (state.chantsVolume <= 0) return;
 
   let targetSound = null;
 
@@ -546,7 +561,7 @@ function pauseSigmaUltrasAfterGoal() {
 
   sigmaUltrasResumeTimeoutId = setTimeout(() => {
     sigmaUltrasResumeTimeoutId = null;
-    if (!state.gameActive || gameOver || !state.chantsEnabled) return;
+    if (!state.gameActive || gameOver || state.chantsVolume <= 0) return;
     if (state.selectedTeam !== pausedTeam) return;
     if (state.half !== pausedHalf || activeSigmaUltrasSound !== pausedSound) return;
     syncSigmaUltrasVolume();
@@ -590,31 +605,8 @@ function createSettingSlider(label, options) {
   return wrapper;
 }
 
-function createSettingToggle(label, options) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "settings-control";
-
-  const row = document.createElement("label");
-  row.className = "settings-control-title";
-
-  const text = document.createElement("span");
-  text.textContent = label;
-
-  const input = document.createElement("input");
-  input.type = "checkbox";
-  input.checked = options.checked;
-  input.addEventListener("change", () => {
-    options.onChange(input.checked);
-  });
-
-  row.appendChild(text);
-  row.appendChild(input);
-  wrapper.appendChild(row);
-  return wrapper;
-}
-
 function showSettingsMenu() {
-  setMenu("Nastavení", "Uprav hlasitost a rychlost míče.", [
+  setMenu("Nastavení", "Uprav hlasitost zvuků, chorálů a rychlost míče.", [
     { label: "Zpět", secondary: true, onClick: showMainMenu },
   ]);
 
@@ -637,11 +629,16 @@ function showSettingsMenu() {
   );
 
   controls.appendChild(
-    createSettingToggle("Chorály", {
-      checked: state.chantsEnabled,
-      onChange: (enabled) => {
-        state.chantsEnabled = enabled;
-        if (!enabled) stopSigmaUltrasChant();
+    createSettingSlider("Hlasitost chorálů", {
+      min: 0,
+      max: 1,
+      step: 0.01,
+      value: state.chantsVolume,
+      format: (v) => `${Math.round(v * 100)} %`,
+      onChange: (v) => {
+        state.chantsVolume = v;
+        syncSigmaUltrasVolume();
+        if (v <= 0) stopSigmaUltrasChant();
         persistSettingsToStorage();
       },
     }),
@@ -764,6 +761,21 @@ function getFallbackTeamLogo(teamName) {
 function getTeamMenuButtonLogo(teamName) {
   const candidates = TEAM_LOGO_CANDIDATES[teamName] || [];
   return candidates[0] || getFallbackTeamLogo(teamName);
+}
+
+function setScoreboardTeamLogo(imgEl, teamName) {
+  if (!imgEl) return;
+  const logoSrc = getTeamMenuButtonLogo(teamName);
+  const fallbackSrc = getFallbackTeamLogo(teamName);
+  imgEl.src = logoSrc;
+  imgEl.alt = `Logo týmu ${teamName}`;
+  imgEl.onerror = () => {
+    if (imgEl.src !== fallbackSrc) {
+      imgEl.src = fallbackSrc;
+      return;
+    }
+    imgEl.onerror = null;
+  };
 }
 
 function loadImageFromCandidates(candidates) {
@@ -890,6 +902,8 @@ function startGame() {
   ai.color = getPlayerColorByTeam(state.aiTeam);
   leftTeamNameEl.textContent = state.selectedTeam;
   rightTeamNameEl.textContent = `${state.aiTeam} (AI)`;
+  setScoreboardTeamLogo(leftTeamLogoEl, state.selectedTeam);
+  setScoreboardTeamLogo(rightTeamLogoEl, state.aiTeam);
   state.lastFrameTime = performance.now();
   resetMatch();
   playSigmaUltrasForHalf(1);
