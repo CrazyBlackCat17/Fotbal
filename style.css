@@ -60,6 +60,25 @@ h1 {
   gap: 0.62rem;
 }
 
+.menu-info-box {
+  margin-top: 0.4rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(178, 242, 204, 0.35);
+  border-radius: 12px;
+  background: rgba(11, 42, 27, 0.72);
+  text-align: left;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.menu-info-box p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: rgba(230, 244, 236, 0.95);
+  opacity: 1;
+}
+
 .menu-copyright {
   margin: 1.45rem 0 0;
   padding: 0.6rem 0 0.2rem;
