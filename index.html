@@ -20,17 +20,25 @@
         <p class="instructions">Drž prst/myš na hřišti a tahej svého hráče.</p>
 
         <section class="scoreboard" aria-label="Skóre">
-          <div>
-            <span class="team" id="leftTeamName">Ty</span>
-            <span id="leftScore">0</span>
+          <div class="score-team score-team--left">
+            <img id="leftTeamLogo" class="score-team-logo" src="" alt="" />
+            <div class="score-team-info">
+              <span class="team" id="leftTeamName">Ty</span>
+              <span class="team-score" id="leftScore">0</span>
+            </div>
           </div>
-          <div class="match-meta">
-            <span id="halfInfo">1. poločas</span>
-            <span id="timeInfo">60 s</span>
+
+          <div class="match-meta" role="status" aria-live="polite">
+            <span class="match-half" id="halfInfo">1. poločas</span>
+            <span class="match-time" id="timeInfo">60 s</span>
           </div>
-          <div>
-            <span class="team" id="rightTeamName">AI</span>
-            <span id="rightScore">0</span>
+
+          <div class="score-team score-team--right">
+            <img id="rightTeamLogo" class="score-team-logo" src="" alt="" />
+            <div class="score-team-info">
+              <span class="team" id="rightTeamName">AI</span>
+              <span class="team-score" id="rightScore">0</span>
+            </div>
           </div>
         </section>
 
