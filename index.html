@@ -8,29 +8,38 @@
   </head>
   <body>
     <main class="game-wrapper">
-      <h1>Czech Mini Football</h1>
+      <h1>CZECH MINIBALL</h1>
 
       <section id="menu" class="menu-card">
         <h2 id="menuTitle">Hlavní menu</h2>
         <p id="menuSubtitle">Vyber co chceš dělat.</p>
         <div id="menuButtons" class="menu-buttons"></div>
+        <p class="menu-copyright">© Made by Tomáš Slezák &amp; ChatGPT Codex</p>
       </section>
 
       <section id="gameView" class="game-view hidden">
         <p class="instructions">Drž prst/myš na hřišti a tahej svého hráče.</p>
 
         <section class="scoreboard" aria-label="Skóre">
-          <div>
-            <span class="team" id="leftTeamName">Ty</span>
-            <span id="leftScore">0</span>
+          <div class="score-team score-team--left">
+            <img id="leftTeamLogo" class="score-team-logo" src="" alt="" />
+            <div class="score-team-info">
+              <span class="team" id="leftTeamName">Ty</span>
+              <span class="team-score" id="leftScore">0</span>
+            </div>
           </div>
-          <div class="match-meta">
-            <span id="halfInfo">1. poločas</span>
-            <span id="timeInfo">60 s</span>
+
+          <div class="match-meta" role="status" aria-live="polite">
+            <span class="match-half" id="halfInfo">1. poločas</span>
+            <span class="match-time" id="timeInfo">60 s</span>
           </div>
-          <div>
-            <span class="team" id="rightTeamName">AI</span>
-            <span id="rightScore">0</span>
+
+          <div class="score-team score-team--right">
+            <img id="rightTeamLogo" class="score-team-logo" src="" alt="" />
+            <div class="score-team-info">
+              <span class="team" id="rightTeamName">AI</span>
+              <span class="team-score" id="rightScore">0</span>
+            </div>
           </div>
         </section>
 
@@ -56,7 +65,7 @@
           <button id="backToMenuBtn" type="button" class="secondary">Zpět do menu</button>
         </div>
         <p id="message" class="message"></p>
-        <p class="todo-note">Logo vybraného týmu se zobrazuje na hráčské kuličce.</p>
+        <p class="todo-note">© Made by Tomáš Slezák &amp; ChatGPT Codex.</p>
       </section>
     </main>
 
