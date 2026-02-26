@@ -47,9 +47,9 @@ const BANIK_ULTRAS_SECOND_HALF_CANDIDATES = ["assets/banikultras2.m4a", "assets/
 const GOAL_CHANT_PAUSE_MS = 4000;
 
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
-const DEFAULT_SOUND_VOLUME = 0.85;
-const DEFAULT_CHANTS_VOLUME = 1;
-const DEFAULT_BALL_SPEED_MULTIPLIER = 1.16;
+const DEFAULT_SOUND_VOLUME = 1;
+const DEFAULT_CHANTS_VOLUME = 0.4;
+const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
 
 const HALF_DURATION = 60;
 const TOTAL_HALVES = 2;
@@ -661,6 +661,18 @@ function showSettingsMenu() {
   menuButtonsEl.prepend(controls);
 }
 
+function renderMainMenuInfo() {
+  const infoBox = document.createElement("section");
+  infoBox.className = "menu-info-box";
+  infoBox.innerHTML = `
+    <p>- Chorály mají tyto týmy: Slavia, Sparta, Baník, Viktoria Plzeň a Sigma Olomouc.</p>
+    <p>- Chorály se dají v nastavení ztlumit či zeslabit</p>
+    <p>- Míč se dá v nastavení zrychlit</p>
+    <p>- V budoucnu přidám více chorálů, týmů, a taky přidám Upgrady, Online mód a Tabulku.</p>
+  `;
+  menuButtonsEl.appendChild(infoBox);
+}
+
 function showMainMenu() {
   state.gameActive = false;
   stopSigmaUltrasChant();
@@ -679,6 +691,8 @@ function showMainMenu() {
       onClick: showSettingsMenu,
     },
   ]);
+
+  renderMainMenuInfo();
 }
 
 function showPlayMenu() {
