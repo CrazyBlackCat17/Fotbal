@@ -49,7 +49,7 @@ const GOAL_CHANT_PAUSE_MS = 4000;
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
 const DEFAULT_SOUND_VOLUME = 1;
 const DEFAULT_CHANTS_VOLUME = 0.4;
-const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
+const DEFAULT_BALL_SPEED_MULTIPLIER = 0.92;
 
 const HALF_DURATION = 60;
 const TOTAL_HALVES = 2;
@@ -60,10 +60,10 @@ const FRICTION = 0.997;
 const PLAYER_SPEED = 8.6;
 
 const AI_PRESETS = {
-  easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
-  medium: { label: "Střední", speed: 3.2, reactionFrames: 8 },
-  hard: { label: "Těžká", speed: 4.3, reactionFrames: 5 },
-  extreme: { label: "Extrémní", speed: 5.5, reactionFrames: 2 },
+  easy: { label: "Lehká", speed: 1.9, reactionFrames: 20 },
+  medium: { label: "Střední", speed: 2.6, reactionFrames: 12 },
+  hard: { label: "Těžká", speed: 3.5, reactionFrames: 8 },
+  extreme: { label: "Extrémní", speed: 4.5, reactionFrames: 5 },
 };
 
 const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín", "Teplice", "Dukla Praha"];
