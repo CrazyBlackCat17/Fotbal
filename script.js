@@ -49,7 +49,7 @@ const GOAL_CHANT_PAUSE_MS = 4000;
 const SETTINGS_STORAGE_KEY = "soccerDuelSettingsV1";
 const DEFAULT_SOUND_VOLUME = 1;
 const DEFAULT_CHANTS_VOLUME = 0.4;
-const DEFAULT_BALL_SPEED_MULTIPLIER = 1;
+const DEFAULT_BALL_SPEED_MULTIPLIER = 0.92;
 
 const HALF_DURATION = 60;
 const TOTAL_HALVES = 2;
@@ -60,10 +60,10 @@ const FRICTION = 0.997;
 const PLAYER_SPEED = 8.6;
 
 const AI_PRESETS = {
-  easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
-  medium: { label: "Střední", speed: 3.2, reactionFrames: 8 },
-  hard: { label: "Těžká", speed: 4.3, reactionFrames: 5 },
-  extreme: { label: "Extrémní", speed: 5.5, reactionFrames: 2 },
+  easy: { label: "Lehká", speed: 1.6, reactionFrames: 24 },
+  medium: { label: "Střední", speed: 2.2, reactionFrames: 16 },
+  hard: { label: "Těžká", speed: 3.0, reactionFrames: 11 },
+  extreme: { label: "Extrémní", speed: 3.8, reactionFrames: 7 },
 };
 
 const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín", "Teplice", "Dukla Praha"];
@@ -167,7 +167,7 @@ function getPlayerBorderColorByTeam(teamName) {
 const ball = { x: canvas.width / 2, y: canvas.height / 2, radius: 18, vx: 0, vy: 0 };
 
 const dragState = { active: false, pointerId: null, targetX: player.x, targetY: player.y };
-const aiBrain = { frame: 0, targetX: ai.x, targetY: ai.y };
+const aiBrain = { frame: 0, targetX: ai.x, targetY: ai.y, perceivedX: ai.x, perceivedY: ai.y };
 
 let leftScore = 0;
 let rightScore = 0;
@@ -880,6 +880,8 @@ function resetPositions() {
   dragState.targetY = player.y;
   aiBrain.targetX = ai.x;
   aiBrain.targetY = ai.y;
+  aiBrain.perceivedX = ai.x;
+  aiBrain.perceivedY = ai.y;
   aiBrain.frame = 0;
 
   ball.x = canvas.width / 2;
@@ -949,15 +951,23 @@ function moveAI() {
   aiBrain.frame += 1;
   if (aiBrain.frame >= state.aiPreset.reactionFrames) {
     aiBrain.frame = 0;
-    aiBrain.targetX = ball.x;
-    aiBrain.targetY = ball.y < canvas.height / 2 ? ball.y : canvas.height * 0.25;
+    aiBrain.perceivedX = ball.x;
+    aiBrain.perceivedY = ball.y < canvas.height / 2 ? ball.y : canvas.height * 0.25;
   }
+
+  const aimSmoothing = 0.18;
+  aiBrain.targetX += (aiBrain.perceivedX - aiBrain.targetX) * aimSmoothing;
+  aiBrain.targetY += (aiBrain.perceivedY - aiBrain.targetY) * aimSmoothing;
 
   const dx = aiBrain.targetX - ai.x;
   const dy = aiBrain.targetY - ai.y;
+  const distance = Math.hypot(dx, dy);
 
-  ai.x += clamp(dx, -state.aiPreset.speed, state.aiPreset.speed);
-  ai.y += clamp(dy, -state.aiPreset.speed, state.aiPreset.speed);
+  if (distance > 0.001) {
+    const step = Math.min(state.aiPreset.speed, distance);
+    ai.x += (dx / distance) * step;
+    ai.y += (dy / distance) * step;
+  }
   ai.x = clamp(ai.x, ai.radius, canvas.width - ai.radius);
   ai.y = clamp(ai.y, ai.radius, canvas.height / 2 - ai.radius);
 }
