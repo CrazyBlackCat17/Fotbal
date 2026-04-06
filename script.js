@@ -57,10 +57,10 @@ const FRICTION = 0.997;
 const PLAYER_SPEED = 7.6;
 
 const AI_PRESETS = {
-  easy: { label: "Lehká", speed: 2.4, reactionFrames: 14 },
-  medium: { label: "Střední", speed: 3.2, reactionFrames: 8 },
-  hard: { label: "Těžká", speed: 4.3, reactionFrames: 5 },
-  extreme: { label: "Extrémní", speed: 5.5, reactionFrames: 2 },
+  easy: { label: "Lehká", speed: 2.1, reactionFrames: 20 },
+  medium: { label: "Střední", speed: 2.9, reactionFrames: 13 },
+  hard: { label: "Těžká", speed: 3.8, reactionFrames: 8 },
+  extreme: { label: "Extrémní", speed: 4.9, reactionFrames: 4 },
 };
 
 const TEAMS = ["Slavia", "Sparta", "Baník", "Hradec Králové", "Karviná", "Pardubice", "Artis Brno", "Sigma Olomouc", "Slovácko", "Viktoria Plzeň", "Mladá Boleslav", "Jablonec", "Slovan Liberec", "Bohemians Praha", "Zlín"];
